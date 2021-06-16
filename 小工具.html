@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代理商金额计算器</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <style>
+        .blue {
+            color: blue;
+        }
+        .red {
+            color: red;
+        }
+        .container{
+            padding: 0 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-group{
+            display: flex;
+            align-items: center;
+            justify-content: start;
+        }
+        label{
+            text-align: right;
+            display: inline-block;
+            width: 200px;
+        }
+        h2{
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .form-inline{
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>代理商金额计算器</h2>
+        <div class="form-group">
+            <div>
+                <label class="control-label">创董真实金额：</label>
+                <input onchange="changeInput(this)" class="level0" id="level0" type="number" />
+            </div>
+            <div>
+                <label class="control-label">创董人数：</label>20
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="control-label">分公司真实金额：</label>
+                <input onchange="changeInput(this)" class="level1" id="level1" type="number" />
+            </div>
+            <div>
+                <label class="control-label">分公司人数：</label>
+                <input onchange="changeInput(this)" type="number" class="level1Num" id="level1Num">
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="control-label">运营中心真实金额：</label>
+                <input onchange="changeInput(this)" class="level2" id="level2" type="number" />
+            </div>
+            <div>
+                <label class="control-label">运营中心人数：</label>
+                <input onchange="changeInput(this)" type="number" class="level2Num" id="level2Num">
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="control-label">高级代理真实金额：</label>
+                <input onchange="changeInput(this)" class="level3" id="level3" type="number" />
+            </div>
+            <div>
+                <label class="control-label">高级代理人数：</label>
+                <input onchange="changeInput(this)" type="number" class="level3Num" id="level3Num">
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="control-label">初级代理真实金额：</label>
+                <input onchange="changeInput(this)" class="level4" id="level4" type="number" />
+            </div>
+            <div>
+                <label class="control-label">创董人数：</label>
+                <input onchange="changeInput(this)" type="number" class="level4Num" id="level4Num">
+            </div>
+        </div>
+        <p>
+            创董真实人均：<span class="blue level0Val"></span>&nbsp;&nbsp;&nbsp;
+            分公司真实人均：<span class="blue level1Val"></span>&nbsp;&nbsp;&nbsp;
+            运营中心真实人均：<span class="blue level2Val"></span>&nbsp;&nbsp;&nbsp;
+            高级代理真实人均：<span class="blue level3Val"></span>&nbsp;&nbsp;&nbsp;
+            初级代理真实人均：<span class="blue level4Val"></span>&nbsp;&nbsp;&nbsp;
+        </p>
+        <p>
+        <h3>若分红池</h3>
+        <div class="">
+            <div class="">
+                <label class="control-label">创董增加：</label>
+                <input onchange="changeInput(this)" class="level0Gn" id="level0Gn"
+                    type="number" />套
+            </div>
+            <div class="">
+                <label class="control-label">分公司增加：</label>
+                <input onchange="changeInput(this)" class="level1Gn" id="level1Gn"
+                    type="number" />套
+            </div>
+            <div class="">
+                <label class="control-label">运营中心增加：</label>
+                <input onchange="changeInput(this)" class="level2Gn" id="level2Gn"
+                    type="number" />套
+            </div>
+            <div class="">
+                <label class="control-label">高级代理增加：</label>
+                <input onchange="changeInput(this)" class="level3Gn" id="level3Gn"
+                    type="number" />套
+            </div>
+            <div class="">
+                <label class="control-label">初级代理增加：</label>
+                <input onchange="changeInput(this)" class="level4Gn" id="level4Gn"
+                    type="number" />套
+            </div>
+        </div>
+        <h3>则</h3>
+        <p>
+            创董总金额：<span class="blue level0Val1"></span>&nbsp;&nbsp;&nbsp;
+            分公司总金额：<span class="blue level1Val1"></span>&nbsp;&nbsp;&nbsp;
+            运营中心总金额：<span class="blue level2Val1"></span>&nbsp;&nbsp;&nbsp;
+            高级代理总金额：<span class="blue level3Val1"></span>&nbsp;&nbsp;&nbsp;
+            初级代理总金额：<span class="blue level4Val1"></span>&nbsp;&nbsp;&nbsp;
+        </p>
+        <p>
+            创董人均：<span class="blue level0Val2"></span>&nbsp;&nbsp;&nbsp;
+            分公司人均：<span class="blue level1Val2"></span>&nbsp;&nbsp;&nbsp;
+            运营中心人均：<span class="blue level2Val2"></span>&nbsp;&nbsp;&nbsp;
+            高级代理人均：<span class="blue level3Val2"></span>&nbsp;&nbsp;&nbsp;
+            初级代理人均：<span class="blue level4Val2"></span>&nbsp;&nbsp;&nbsp;
+        </p>
+        </p>
+        <p>总亏损：<span class="totalLoss red"></span></p>
+    </div>
+</body>
+<script>
+    document.onkeydown = function (e) { // 回车提交表单
+        // 兼容FF和IE和Opera
+        var theEvent = window.event || e;
+        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        if (code == 13) {
+            submit()
+        }
+    }
+    var data = {
+        level0: 0,
+        level0Num: 20,
+        level1: 0,
+        level1Num: 1,
+        level2: 0,
+        level2Num: 1,
+        level3: 0,
+        level3Num: 1,
+        level4: 0,
+        level4Num: 1,
+        level0Gn: 0,
+        level1Gn: 0,
+        level2Gn: 0,
+        level3Gn: 0,
+        level4Gn: 0,
+
+    }
+    var gN = {
+        level0Gn: 156,
+        level1Gn: 100,
+        level2Gn: 70,
+        level3Gn: 60,
+        level4Gn: 50,
+    }
+    var res = {
+        level0Val: 0,
+        level1Val: 0,
+        level2Val: 0,
+        level3Val: 0,
+        level4Val: 0,
+        level0Val1: 0,
+        level1Val1: 0,
+        level2Val1: 0,
+        level3Val1: 0,
+        level4Val1: 0,
+        level0Val2: 0,
+        level1Val2: 0,
+        level2Val2: 0,
+        level3Val2: 0,
+        level4Val2: 0,
+    }
+    var keys = [
+        'level0',
+        'level1',
+        'level2',
+        'level3',
+        'level4',
+    ]
+    for (let i in data) {
+        if (window.localStorage.data) {
+            data = JSON.parse(window.localStorage.data)
+        }
+        if (i == 'level0Num') {
+        } else {
+            getVal(i).value = data[i]
+
+        }
+    }
+    //数学计算集合
+    var math = {
+        add: function (arg1, arg2) {//加法
+            let r1, r2, m;
+            try { r1 = arg1.toString().split(".")[1].length } catch (e) { r1 = 0 };
+            try { r2 = arg2.toString().split(".")[1].length } catch (e) { r2 = 0 };
+            m = Math.pow(10, Math.max(r1, r2));
+            return (arg1 * m + arg2 * m) / m;
+        },
+        sub(arg1, arg2) {//减法
+            let r1, r2, m, n;
+            try { r1 = arg1.toString().split(".")[1].length; } catch (e) { r1 = 0; }
+            try { r2 = arg2.toString().split(".")[1].length; } catch (e) { r2 = 0; }
+            m = Math.pow(10, Math.max(r1, r2));
+            //动态控制精度长度
+            n = (r1 >= r2) ? r1 : r2;
+            return ((arg1 * m - arg2 * m) / m).toFixed(n);
+        },
+        cheng(arg1, arg2) {//乘法
+            let m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+            try { m += s1.split(".")[1].length } catch (e) { };
+            try { m += s2.split(".")[1].length } catch (e) { };
+            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+        },
+        chu(arg1, arg2) {//除法
+            let t1 = 0, t2 = 0, r1, r2;
+            try { t1 = arg1.toString().split(".")[1].length } catch (e) { }
+            try { t2 = arg2.toString().split(".")[1].length } catch (e) { }
+            with (Math) {
+                r1 = Number(arg1.toString().replace(".", ""))
+                r2 = Number(arg2.toString().replace(".", ""))
+                return math.cheng((r1 / r2), pow(10, t2 - t1));
+            }
+        },
+
+        two(num) {//保留小数后两位
+            return Number(num.toString().match(/^\d+(?:\.\d{0,2})?/))
+        }
+    };
+    //根据类名获取dom
+    function getVal(className) {
+        return document.getElementsByClassName(className)[0];
+    }
+
+
+    function changeInput(that) {//输入框发生改变调用
+        let thisKey = that.id;
+        data[thisKey] = that.value
+
+    }
+    //提交
+    function submit() {
+        let totalLoss = 0;
+
+        for (let i in data) {
+            let val = data[i]
+            try { val = getVal(i).value; } catch (err) { }
+            data[i] = Number(val)
+        }
+        window.localStorage.data = JSON.stringify(data);
+        for (let i in keys) {
+            try {
+                let dataKey1 = keys[i];
+                let dataKey2 = keys[i] + 'Num';
+                let resKey1 = keys[i] + 'Val';
+                let rA = data[dataKey1];
+                getVal(resKey1).innerHTML = math.two(math.chu(data[dataKey1], data[dataKey2]));
+
+                let gNkey = keys[i] + 'Gn';
+                let resGnKey = keys[i] + 'Val1'
+                let resGnKey2 = keys[i] + 'Val2'
+                let tA = math.add(math.cheng(data[gNkey], gN[gNkey]), rA);
+                getVal(resGnKey).innerHTML = tA;
+                getVal(resGnKey2).innerHTML = math.two(math.chu(tA, data[dataKey2]));
+
+
+                totalLoss += Number(math.sub(tA, rA))
+                // console.log(totalLoss,math.sub(tA , rA))
+            } catch (err) { }
+
+        }
+
+        getVal('totalLoss').innerHTML = totalLoss;
+
+    }
+
+    function onLoad(){
+        submit();
+        let p = new Proxy(data,{
+            get(target,key){
+                debugger
+                return target[key]
+            }
+        })
+    }
+    onLoad()
+</script>
+
+</html>
